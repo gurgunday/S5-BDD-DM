@@ -71,27 +71,28 @@ CREATE TABLE content (
     CONSTRAINT pk_content PRIMARY KEY(id)
 );
 
--- TODO: ADD PRIMARY KEYS
-
 CREATE TABLE produce (
     idP BIGINT NOT NULL,
     idC BIGINT NOT NULL,
     CONSTRAINT fkP_produce FOREIGN KEY(idP) REFERENCES producer(id),
-    CONSTRAINT fkC_produce FOREIGN KEY(idC) REFERENCES content(id)
+    CONSTRAINT fkC_produce FOREIGN KEY(idC) REFERENCES content(id),
+    CONSTRAINT pk_produce PRIMARY KEY(idP, idC)
 );
 
 CREATE TABLE direct (
     idD BIGINT NOT NULL,
     idC BIGINT NOT NULL,
     CONSTRAINT fkD_direct FOREIGN KEY(idD) REFERENCES director(id),
-    CONSTRAINT fkC_direct FOREIGN KEY(idC) REFERENCES content(id)
+    CONSTRAINT fkC_direct FOREIGN KEY(idC) REFERENCES content(id),
+    CONSTRAINT pk_direct PRIMARY KEY(idD, idC)
 );
 
 CREATE TABLE play_in (
     idA BIGINT NOT NULL,
     idC BIGINT NOT NULL,
     CONSTRAINT fkA_play_in FOREIGN KEY(idA) REFERENCES actor(id),
-    CONSTRAINT fkC_play_in FOREIGN KEY(idC) REFERENCES content(id)
+    CONSTRAINT fkC_play_in FOREIGN KEY(idC) REFERENCES content(id),
+    CONSTRAINT pk_play_in PRIMARY KEY(idA, idC)
 );
 
 CREATE TABLE watch (
@@ -99,7 +100,8 @@ CREATE TABLE watch (
     idC BIGINT NOT NULL,
     date DATETIME NOT NULL,
     CONSTRAINT fkM_watch FOREIGN KEY(idM) REFERENCES member(id),
-    CONSTRAINT fkC_watch FOREIGN KEY(idC) REFERENCES content(id)
+    CONSTRAINT fkC_watch FOREIGN KEY(idC) REFERENCES content(id),
+    CONSTRAINT pk_watch PRIMARY KEY(idM, idC, date)
 );
 
 CREATE TABLE review (
@@ -109,5 +111,6 @@ CREATE TABLE review (
     comment TEXT,
     CONSTRAINT fkM_review FOREIGN KEY(idM) REFERENCES member(id),
     CONSTRAINT fkC_review FOREIGN KEY(idC) REFERENCES content(id),
+    CONSTRAINT pk_review PRIMARY KEY(idM, idC),
     CONSTRAINT rating_range CHECK (rating >= 0 AND rating <= 10)
 );
