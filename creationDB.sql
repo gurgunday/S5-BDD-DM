@@ -98,17 +98,17 @@ CREATE TABLE play_in (
 CREATE TABLE watch (
     idM BIGINT NOT NULL,
     idC BIGINT NOT NULL,
-    date DATETIME NOT NULL,
+    dateW DATETIME NOT NULL,
     CONSTRAINT fkM_watch FOREIGN KEY(idM) REFERENCES member(id),
     CONSTRAINT fkC_watch FOREIGN KEY(idC) REFERENCES content(id),
-    CONSTRAINT pk_watch PRIMARY KEY(idM, idC, date)
+    CONSTRAINT pk_watch PRIMARY KEY(idM, idC, dateW)
 );
 
 CREATE TABLE review (
     idM BIGINT NOT NULL,
     idC BIGINT NOT NULL,
     rating INT NOT NULL,
-    comment TEXT,
+    commentR TEXT,
     CONSTRAINT fkM_review FOREIGN KEY(idM) REFERENCES member(id),
     CONSTRAINT fkC_review FOREIGN KEY(idC) REFERENCES content(id),
     CONSTRAINT pk_review PRIMARY KEY(idM, idC),
