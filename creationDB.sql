@@ -67,7 +67,7 @@ CREATE TABLE content (
     type VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
-    description TEXT,
+    description VARCHAR(255),
     CONSTRAINT pk_content PRIMARY KEY(id)
 );
 
@@ -108,7 +108,7 @@ CREATE TABLE review (
     idM INT NOT NULL,
     idC INT NOT NULL,
     rating INT NOT NULL,
-    commentR TEXT,
+    commentR VARCHAR(255),
     CONSTRAINT fkM_review FOREIGN KEY(idM) REFERENCES member(id),
     CONSTRAINT fkC_review FOREIGN KEY(idC) REFERENCES content(id),
     CONSTRAINT pk_review PRIMARY KEY(idM, idC),
