@@ -26,18 +26,18 @@ CREATE TABLE account (
 );
 
 CREATE TABLE free_account (
-    id VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
     prefered_ad_category VARCHAR(255),
-    CONSTRAINT fk_account FOREIGN KEY(id) REFERENCES account(email),
-    CONSTRAINT pk_premium_account PRIMARY KEY(id)
+    CONSTRAINT fk_account FOREIGN KEY(email) REFERENCES account(email),
+    CONSTRAINT pk_premium_account PRIMARY KEY(email)
 );
 
 CREATE TABLE premium_account (
-    id VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
     premium_end_date DATE NOT NULL,
     billing_interval VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_account FOREIGN KEY(id) REFERENCES account(email),
-    CONSTRAINT pk_premium_account PRIMARY KEY(id),
+    CONSTRAINT fk_account FOREIGN KEY(email) REFERENCES account(email),
+    CONSTRAINT pk_premium_account PRIMARY KEY(email),
     CONSTRAINT billing_interval_type CHECK (billing_interval IN ('MONTHLY', 'YEARLY'))
 );
 
@@ -52,8 +52,8 @@ CREATE TABLE member (
     id INT NOT NULL,
     email VARCHAR(255) NOT NULL,
     last_login TIMESTAMP,
-    CONSTRAINT fkP_member FOREIGN KEY(id) REFERENCES person(id),
     CONSTRAINT fkA_member FOREIGN KEY(email) REFERENCES account(email),
+    CONSTRAINT fkP_member FOREIGN KEY(id) REFERENCES person(id),
     CONSTRAINT pk_member PRIMARY KEY(id)
 );
 
