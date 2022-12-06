@@ -155,7 +155,7 @@ CREATE TABLE account (
 CREATE TABLE free_account (
     email VARCHAR(255) NOT NULL,
     prefered_ad_category VARCHAR(255),
-    CONSTRAINT fk_account FOREIGN KEY(email) REFERENCES account(email),
+    CONSTRAINT fk_free_account FOREIGN KEY(email) REFERENCES account(email),
     CONSTRAINT pk_free_account PRIMARY KEY(email)
 );
 
@@ -163,7 +163,7 @@ CREATE TABLE premium_account (
     email VARCHAR(255) NOT NULL,
     premium_end_date DATE NOT NULL,
     billing_interval VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_account FOREIGN KEY(email) REFERENCES account(email),
+    CONSTRAINT fk_premium_account FOREIGN KEY(email) REFERENCES account(email),
     CONSTRAINT pk_premium_account PRIMARY KEY(email),
     CONSTRAINT billing_interval_type CHECK (billing_interval IN ('MONTHLY', 'YEARLY'))
 );
