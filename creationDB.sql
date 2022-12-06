@@ -156,7 +156,7 @@ CREATE TABLE free_account (
     email VARCHAR(255) NOT NULL,
     prefered_ad_category VARCHAR(255),
     CONSTRAINT fk_account FOREIGN KEY(email) REFERENCES account(email),
-    CONSTRAINT pk_premium_account PRIMARY KEY(email)
+    CONSTRAINT pk_free_account PRIMARY KEY(email)
 );
 
 CREATE TABLE premium_account (
