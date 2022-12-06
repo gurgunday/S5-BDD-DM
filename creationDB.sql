@@ -28,14 +28,14 @@ CREATE TABLE premium_account (
 );
 
 CREATE TABLE person (
-    id BIGINT NOT NULL,
+    id INT NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     CONSTRAINT pk_person PRIMARY KEY(id)
 );
 
 CREATE TABLE member (
-    id BIGINT NOT NULL,
+    id INT NOT NULL,
     email VARCHAR(255) NOT NULL,
     last_login DATETIME,
     CONSTRAINT fkP_member FOREIGN KEY(id) REFERENCES person(id),
@@ -44,26 +44,26 @@ CREATE TABLE member (
 );
 
 CREATE TABLE actor (
-    id BIGINT NOT NULL,
+    id INT NOT NULL,
     ethnicity VARCHAR(255),
     CONSTRAINT fk_actor FOREIGN KEY(id) REFERENCES person(id),
     CONSTRAINT pk_actor PRIMARY KEY(id)
 );
 
 CREATE TABLE director (
-    id BIGINT NOT NULL,
+    id INT NOT NULL,
     CONSTRAINT fk_director FOREIGN KEY(id) REFERENCES person(id),
     CONSTRAINT pk_director PRIMARY KEY(id)
 );
 
 CREATE TABLE producer (
-    id BIGINT NOT NULL,
+    id INT NOT NULL,
     name VARCHAR(255) NOT NULL,
     CONSTRAINT pk_producer PRIMARY KEY(id)
 );
 
 CREATE TABLE content (
-    id BIGINT NOT NULL,
+    id INT NOT NULL,
     type VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -72,32 +72,32 @@ CREATE TABLE content (
 );
 
 CREATE TABLE produce (
-    idP BIGINT NOT NULL,
-    idC BIGINT NOT NULL,
+    idP INT NOT NULL,
+    idC INT NOT NULL,
     CONSTRAINT fkP_produce FOREIGN KEY(idP) REFERENCES producer(id),
     CONSTRAINT fkC_produce FOREIGN KEY(idC) REFERENCES content(id),
     CONSTRAINT pk_produce PRIMARY KEY(idP, idC)
 );
 
 CREATE TABLE direct (
-    idD BIGINT NOT NULL,
-    idC BIGINT NOT NULL,
+    idD INT NOT NULL,
+    idC INT NOT NULL,
     CONSTRAINT fkD_direct FOREIGN KEY(idD) REFERENCES director(id),
     CONSTRAINT fkC_direct FOREIGN KEY(idC) REFERENCES content(id),
     CONSTRAINT pk_direct PRIMARY KEY(idD, idC)
 );
 
 CREATE TABLE play_in (
-    idA BIGINT NOT NULL,
-    idC BIGINT NOT NULL,
+    idA INT NOT NULL,
+    idC INT NOT NULL,
     CONSTRAINT fkA_play_in FOREIGN KEY(idA) REFERENCES actor(id),
     CONSTRAINT fkC_play_in FOREIGN KEY(idC) REFERENCES content(id),
     CONSTRAINT pk_play_in PRIMARY KEY(idA, idC)
 );
 
 CREATE TABLE watch (
-    idM BIGINT NOT NULL,
-    idC BIGINT NOT NULL,
+    idM INT NOT NULL,
+    idC INT NOT NULL,
     dateW DATETIME NOT NULL,
     CONSTRAINT fkM_watch FOREIGN KEY(idM) REFERENCES member(id),
     CONSTRAINT fkC_watch FOREIGN KEY(idC) REFERENCES content(id),
@@ -105,8 +105,8 @@ CREATE TABLE watch (
 );
 
 CREATE TABLE review (
-    idM BIGINT NOT NULL,
-    idC BIGINT NOT NULL,
+    idM INT NOT NULL,
+    idC INT NOT NULL,
     rating INT NOT NULL,
     commentR TEXT,
     CONSTRAINT fkM_review FOREIGN KEY(idM) REFERENCES member(id),
