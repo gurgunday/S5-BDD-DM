@@ -54,7 +54,7 @@ CREATE TABLE member (
     last_login TIMESTAMP,
     CONSTRAINT fkP_member FOREIGN KEY(id) REFERENCES person(id),
     CONSTRAINT fkA_member FOREIGN KEY(email) REFERENCES account(email),
-    CONSTRAINT pk_member PRIMARY KEY(id, email)
+    CONSTRAINT pk_member PRIMARY KEY(id)
 );
 
 CREATE TABLE actor (
