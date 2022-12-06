@@ -20,8 +20,8 @@ CREATE TABLE free_account (
 
 CREATE TABLE premium_account (
     id VARCHAR(255) NOT NULL,
-    premium_end_date DATETIME,
-    billing_interval VARCHAR(255),
+    premium_end_date DATE NOT NULL,
+    billing_interval VARCHAR(255) NOT NULL,
     CONSTRAINT fk_account FOREIGN KEY(id) REFERENCES account(email),
     CONSTRAINT pk_premium_account PRIMARY KEY(id),
     CONSTRAINT billing_interval_type CHECK (billing_interval IN ('MONTHLY', 'YEARLY'))
@@ -37,7 +37,7 @@ CREATE TABLE person (
 CREATE TABLE member (
     id INT NOT NULL,
     email VARCHAR(255) NOT NULL,
-    last_login DATETIME,
+    last_login TIMESTAMP,
     CONSTRAINT fkP_member FOREIGN KEY(id) REFERENCES person(id),
     CONSTRAINT fkA_member FOREIGN KEY(email) REFERENCES account(email),
     CONSTRAINT pk_member PRIMARY KEY(id, email)
@@ -98,7 +98,7 @@ CREATE TABLE play_in (
 CREATE TABLE watch (
     idM INT NOT NULL,
     idC INT NOT NULL,
-    dateW DATETIME NOT NULL,
+    dateW TIMESTAMP NOT NULL,
     CONSTRAINT fkM_watch FOREIGN KEY(idM) REFERENCES member(id),
     CONSTRAINT fkC_watch FOREIGN KEY(idC) REFERENCES content(id),
     CONSTRAINT pk_watch PRIMARY KEY(idM, idC, dateW)
