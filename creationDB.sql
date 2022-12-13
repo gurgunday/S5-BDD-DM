@@ -1,151 +1,3 @@
-DROP DATABASE IF EXISTS gmsflix;
-
-CREATE DATABASE gmsflix;
-
-USE gmsflix;
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE review';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE watch';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE play_in';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE direct';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE produce';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE content';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE producer';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE director';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE actor';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE member';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE person';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE premium_account';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE free_account';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE account';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
-
--------------------------------------
-
 CREATE TABLE account (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -255,3 +107,140 @@ CREATE TABLE review (
     CONSTRAINT pk_review PRIMARY KEY(idM, idC),
     CONSTRAINT rating_range CHECK (rating >= 0 AND rating <= 10)
 );
+
+DELIMITER //
+
+CREATE TRIGGER check_account_free
+BEFORE INSERT ON premium_account
+FOR EACH ROW
+BEGIN
+    DECLARE is_free BOOLEAN;
+
+    SELECT COUNT(*) INTO is_free
+    FROM free_account
+    WHERE email = NEW.email;
+
+    IF is_free THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The account cannot be free and paid at the same time.';
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER check_account_premium
+BEFORE INSERT ON free_account
+FOR EACH ROW
+BEGIN
+    DECLARE is_premium BOOLEAN;
+
+    SELECT COUNT(*) INTO is_premium
+    FROM premium_account
+    WHERE email = NEW.email;
+
+    IF is_premium THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The account cannot be free and paid at the same time.';
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER check_num_members
+BEFORE INSERT ON member
+FOR EACH ROW
+BEGIN
+    DECLARE num_members INT;
+
+    SELECT COUNT(*) INTO num_members
+    FROM member
+    WHERE email = NEW.email;
+
+    IF num_members >= 4 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The account that this member will be connected to already has 4 members.';
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE director_actor(id INT)
+BEGIN
+  DECLARE does_belong BOOLEAN;
+  
+  SELECT COUNT(*) INTO does_belong
+  FROM actor
+  WHERE id = id;
+  
+  IF does_belong THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Person is already an actor.';
+  END IF;
+
+  SELECT COUNT(*) INTO does_belong
+  FROM director
+  WHERE id = id;
+
+  IF does_belong THEN
+  SIGNAL SQLSTATE '45000'
+  SET MESSAGE_TEXT = 'Person is already a director.';
+  END IF;
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER check_director_is_actor
+BEFORE INSERT ON director
+FOR EACH ROW
+BEGIN
+  CALL director_actor(NEW.id);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER check_actor_is_director
+BEFORE INSERT ON actor
+FOR EACH ROW
+BEGIN
+  CALL director_actor(NEW.id);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE FUNCTION has_watched(idM INT)
+RETURNS BOOLEAN
+BEGIN
+  DECLARE has_watched BOOLEAN;
+  
+  SELECT COUNT(*) INTO has_watched
+  FROM watch
+  WHERE idM = idM;
+  
+  RETURN has_watched;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER check_watch_before_insert
+BEFORE INSERT ON review
+FOR EACH ROW
+BEGIN
+  IF NOT has_watched(NEW.idM) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Member has not watched the content';
+  END IF;
+END //
+
+DELIMITER ;
