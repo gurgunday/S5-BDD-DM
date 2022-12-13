@@ -108,6 +108,8 @@ CREATE TABLE review (
     CONSTRAINT rating_range CHECK (rating >= 0 AND rating <= 10)
 );
 
+--- TRIGGERS PROCS AND FUNCTIONS ---
+
 DELIMITER //
 
 CREATE TRIGGER check_account_free
