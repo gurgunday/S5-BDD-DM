@@ -1,5 +1,9 @@
 SET GLOBAL log_bin_trust_function_creators = 1;
 
+CREATE DATABASE GMSFlix;
+
+USE GMSFlix;
+
 CREATE TABLE account (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
