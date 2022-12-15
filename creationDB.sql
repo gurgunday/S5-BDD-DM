@@ -192,7 +192,6 @@ BEGIN
   SIGNAL SQLSTATE '45000'
   SET MESSAGE_TEXT = 'Person is already a director.';
   END IF;
-
 END //
 
 DELIMITER ;
