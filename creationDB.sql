@@ -175,13 +175,13 @@ DELIMITER ;
 
 DELIMITER //
 
-CREATE PROCEDURE director_actor(id INT)
+CREATE PROCEDURE director_actor(idP INT)
 BEGIN
   DECLARE does_belong BOOLEAN;
   
   SELECT COUNT(*) INTO does_belong
   FROM actor
-  WHERE id = id;
+  WHERE id = idP;
   
   IF does_belong THEN
     SIGNAL SQLSTATE '45000'
@@ -190,7 +190,7 @@ BEGIN
 
   SELECT COUNT(*) INTO does_belong
   FROM director
-  WHERE id = id;
+  WHERE id = idP;
 
   IF does_belong THEN
   SIGNAL SQLSTATE '45000'
